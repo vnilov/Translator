@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 public class HistoryUnitTest {
 
     private History history;
+    private History historyCheck;
 
     Translation translation = new Translation("Hello", "Привет", "en", "ru");
     Translation translationRepeat = new Translation("Hello", "Привет", "en", "ru");
@@ -22,9 +23,14 @@ public class HistoryUnitTest {
     @Before
     public void init() {
         this.history = History.getInstance();
+        this.historyCheck = History.getInstance();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Test
+    public void checkSingleton() {
+        assertEquals(history, historyCheck);
+    }
+
     @Test
     public void testAdd() {
         // add 2 elements

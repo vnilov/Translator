@@ -1,7 +1,5 @@
 package com.example.vnilov.translator.models;
 
-import java.util.Optional;
-
 /**
  * Class which describes Translation entity.
  * This is the main entity used in our application.

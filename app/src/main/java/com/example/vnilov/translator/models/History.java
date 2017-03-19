@@ -1,7 +1,5 @@
 package com.example.vnilov.translator.models;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Singleton which describes history entity of our application.

@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 /**
- * Dictionary interface
+ * Dictionary abstract class
  * This is used as core from History and Favorites singletons
  *
  * Created by vnilov on 18.03.17.

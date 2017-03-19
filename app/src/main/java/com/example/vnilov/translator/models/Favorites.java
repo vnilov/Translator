@@ -1,8 +1,5 @@
 package com.example.vnilov.translator.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Singleton which describes favorites entity of our application.
  *
