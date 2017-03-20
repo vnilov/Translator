@@ -6,7 +6,7 @@ package com.example.vnilov.translator.models;
  * Created by vnilov on 18.03.17.
  */
 
-final class Favorites extends Dictionary {
+class Favorites extends Dictionary {
 
     private static final Favorites ourInstance = new Favorites();
 

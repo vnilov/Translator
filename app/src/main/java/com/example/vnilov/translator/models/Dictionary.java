@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import android.content.Context;
+
+import com.example.vnilov.translator.db.DBHelper;
 
 /**
  * Dictionary abstract class
@@ -14,7 +17,10 @@ import java.util.Optional;
 
 abstract class Dictionary {
 
+
+    private Context ctx;
     protected final List<Translation> storage = new ArrayList<Translation>();
+    protected DBHelper dbHelper = new DBHelper(this.ctx);
 
     // check if Translation exists
     boolean ifExists(Translation translation) {
@@ -61,9 +67,9 @@ abstract class Dictionary {
     };
 
     // get the translation from the dictionary
-    Optional<Translation> get(String name, String lang) {
+    Optional<Translation> get(String name, String from, String to) {
         return this.storage.stream()
-                .filter(item -> item.getTranslationKey().equals(item.getKey(name, lang)))
+                .filter(item -> item.getTranslationKey().equals(item.getKey(name, from, to)))
                 .findFirst();
     };
 

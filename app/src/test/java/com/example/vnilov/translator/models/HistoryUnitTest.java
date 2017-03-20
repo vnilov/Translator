@@ -4,9 +4,6 @@ package com.example.vnilov.translator.models;
  * Created by vnilov on 19.03.17.
  */
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -41,14 +41,15 @@ public class TranslationUnitTest {
 
     @Test
     public void testGetKey() {
-        assertEquals(this.translation.getKey("param1", "param2"), "param1::param2");
+        assertEquals(this.translation.getKey("param1", "param2", "param3"), "param1::param2::param3");
     }
 
     @Test
     public void testGetTranslationKey() {
         this.translation.setInput("Hola");
         this.translation.setFromLangCode("es");
-        assertEquals(this.translation.getTranslationKey(), "hola::es");
+        this.translation.setToLangCode("ru");
+        assertEquals(this.translation.getTranslationKey(), "hola::es::ru");
     }
 
     @Test

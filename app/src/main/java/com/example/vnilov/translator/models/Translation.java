@@ -7,7 +7,7 @@ package com.example.vnilov.translator.models;
  * Created by vnilov on 18.03.17.
  */
 
-final class Translation {
+public final class Translation {
 
     // Input text for translate
     private String input;
@@ -22,7 +22,7 @@ final class Translation {
 
 
     /*
-    * Setters and Gettrs block
+    * Setters and Getters block
     */
     public String getInput() {
         return this.input;
@@ -67,12 +67,12 @@ final class Translation {
 
     // make key from the instance of the translation
     public String getTranslationKey() {
-        return this.getKey(this.getInput(), this.getFromLangCode());
+        return this.getKey(this.getInput(), this.getFromLangCode(), this.getToLangCode());
     }
 
-    public String getKey(String input, String lang) throws IllegalArgumentException {
+    public String getKey(String input, String from, String to) throws IllegalArgumentException {
         // make key from parameters
-        return input.toLowerCase() + "::" + lang.toLowerCase();
+        return input.toLowerCase() + "::" + from.toLowerCase() + "::" + to.toLowerCase();
     }
 
     public boolean isFavorite() {
