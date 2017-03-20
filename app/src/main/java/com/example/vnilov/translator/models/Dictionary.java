@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import android.content.Context;
 
-import com.example.vnilov.translator.db.DBHelper;
+import com.example.vnilov.translator.DBHelper;
 
 /**
  * Dictionary abstract class

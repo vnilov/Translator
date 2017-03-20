@@ -6,8 +6,7 @@ package com.example.vnilov.translator.models;
  *
  * Created by vnilov on 18.03.17.
  */
-
-public final class Translation {
+ public final class Translation {
 
     // Input text for translate
     private String input;

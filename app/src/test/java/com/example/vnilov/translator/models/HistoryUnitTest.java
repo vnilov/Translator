@@ -4,10 +4,20 @@ package com.example.vnilov.translator.models;
  * Created by vnilov on 19.03.17.
  */
 
+import com.example.vnilov.translator.BuildConfig;
+import com.example.vnilov.translator.DBHelper;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
 import static org.junit.Assert.*;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class HistoryUnitTest {
 
     private History history;
@@ -21,6 +31,7 @@ public class HistoryUnitTest {
     public void init() {
         this.history = History.getInstance();
         this.historyCheck = History.getInstance();
+        DBHelper dbHelper = new DBHelper(RuntimeEnvironment.application);
     }
 
     @Test
