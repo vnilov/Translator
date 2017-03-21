@@ -19,8 +19,18 @@ abstract class Dictionary {
 
 
     private Context ctx;
-    protected final List<Translation> storage = new ArrayList<Translation>();
+    protected List<Translation> storage = new ArrayList<Translation>();
     protected DBHelper dbHelper = new DBHelper(this.ctx);
+
+    // set dbHelper if it needed (especially for tests)
+    void setDbHelper(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    // set translation storage
+    void setStorage(List<Translation> storage) {
+        this.storage = storage;
+    }
 
     // check if Translation exists
     boolean ifExists(Translation translation) {
@@ -28,7 +38,7 @@ abstract class Dictionary {
                 .filter(item -> item.getTranslationKey().equals(translation.getTranslationKey()))
                 .findFirst();
         return t.isPresent();
-    };
+    }
 
     Integer getIndex(Translation translation) {
         // setup the default value
@@ -47,7 +57,7 @@ abstract class Dictionary {
     }
 
     // add translation to the dictionary using Translation entity
-    void add(Translation translation) {};
+    void add(Translation translation) {}
 
 
     // remove translation from the dictionary using Translation entity
@@ -59,7 +69,7 @@ abstract class Dictionary {
                 iterator.remove();
             }
         }
-    };
+    }
 
     // remove all entities from the dictionary
     void deleteAll() {

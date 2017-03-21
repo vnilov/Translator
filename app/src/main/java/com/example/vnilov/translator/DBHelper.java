@@ -2,9 +2,13 @@ package com.example.vnilov.translator;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.vnilov.translator.models.Translation;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,6 +27,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CN_SORT = "SORT";
     public static final String CN_FAVORITE = "IS_FAVORITE";
     public static final String CN_HISTORY = "IN_HISTORY";
+    public static final int ALL = 1;
+    public static final int HISTORY = 2;
+    public static final int FAVORITES = 3;
+    private int maxSort;
 
     private String createTableSQL() {
         return "CREATE TABLE " + TABLE_NAME + " (" +
@@ -39,6 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        // get max sort value on object's initiating
     }
 
     @Override
@@ -51,12 +60,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void add(Translation translation, Integer atIndex, Optional<Integer> is_favorite) throws Exception {
+    public void add(Translation translation, Integer atIndex, int is_favorite) throws Exception {
 
         ContentValues values = new ContentValues();
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (is_favorite.isPresent() && is_favorite.get().equals(1)) {
+        if (is_favorite > 0) {
             values.put(CN_FAVORITE, 1);
         }
 
@@ -71,22 +80,22 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // function for updating sort or favorites fields
-    public void update(Translation translation, Integer atIndex, Optional<Integer> is_favorite) throws Exception {
+    public void update(Translation translation, Integer atIndex, int is_favorite) throws Exception {
 
 
         ContentValues values = new ContentValues();
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (is_favorite.isPresent() && is_favorite.get().equals(1)) {
+        if (is_favorite > 0) {
             values.put(CN_FAVORITE, 1);
         }
 
         // update sort field
-        values.put(DBHelper.CN_SORT, atIndex);
+        values.put(CN_SORT, atIndex);
 
-        String where = DBHelper.CN_INPUT +
-                " = ? AND " + DBHelper.CN_FROM_LANG +
-                " = ? AND" + DBHelper.CN_TO_LANG
+        String where = CN_INPUT +
+                " = ? AND " + CN_FROM_LANG +
+                " = ? AND " + CN_TO_LANG
                 + " = ?";
         String[] whereArgs = {
                 translation.getInput(),
@@ -95,6 +104,106 @@ public class DBHelper extends SQLiteOpenHelper {
         };
 
         // update value
-        db.update(DBHelper.TABLE_NAME, values, where, whereArgs);
+        db.update(TABLE_NAME, values, where, whereArgs);
+    }
+
+    public List<Translation> get(int type) throws Exception {
+
+        // initialize result list
+        List<Translation> result = new ArrayList<Translation>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = {
+                CN_INPUT, CN_TRANSLATION, CN_FROM_LANG, CN_TO_LANG, CN_FAVORITE, CN_SORT
+        };
+
+        String sortOrder =
+                CN_SORT + " ASC";
+
+        String where;
+        String[] whereArgs = new String[1];
+
+        switch (type) {
+            case FAVORITES:
+                where = CN_FAVORITE + " = ?";
+                whereArgs[0] = "1";
+                break;
+            case HISTORY:
+                where = CN_HISTORY + " = ?";
+                whereArgs[0] = "1";
+                break;
+            case ALL:
+            default:
+                where = null;
+                whereArgs = null;
+                break;
+        }
+
+        Cursor cursor  = db.query(
+                TABLE_NAME,
+                projection,
+                where,
+                whereArgs,
+                null,
+                null,
+                sortOrder
+        );
+
+        if (cursor.moveToFirst()){
+            do {
+                Translation translation = new Translation(
+                        cursor.getString(cursor.getColumnIndexOrThrow(CN_INPUT)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(CN_TRANSLATION)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(CN_FROM_LANG)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(CN_TO_LANG))
+                );
+                if (Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(CN_FAVORITE))) == 1) {
+                    translation.setFavorite();
+                }
+                result.add(translation);
+
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return result;
+    }
+
+    /* Get max value of sort in our table.
+     * We'll use for our next add/update queries.
+     * We could use autoincrement field, but if we did this,
+     * we'll make 2 queries(delete and insert) instead one update;
+     * I chose the first variant;
+    */
+    public int getMaxSortDB() {
+
+        int result = -1;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] projection = { CN_SORT };
+        String sortOrder = CN_SORT + " DESC";
+
+        Cursor cursor  = db.query(TABLE_NAME, projection, null, null, null, null, sortOrder, "1");
+
+        if (cursor.moveToFirst()) {
+            result = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(CN_SORT)));
+        }
+
+        cursor.close();
+
+        return result;
+    }
+
+    // getter for maxSort
+    public int getMaxSort() {
+        return this.maxSort;
+    }
+
+    // setter
+    public void setMaxSort(int value) {
+        this.maxSort = value;
     }
 }
