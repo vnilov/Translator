@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import android.app.Application;
 import android.content.Context;
 
 import com.example.vnilov.translator.DBHelper;
@@ -17,10 +19,18 @@ import com.example.vnilov.translator.DBHelper;
 
 abstract class Dictionary {
 
-
-    private Context ctx;
     protected List<Translation> storage = new ArrayList<Translation>();
-    protected DBHelper dbHelper = new DBHelper(this.ctx);
+
+    protected Context ctx;
+
+    // I couldn't understand the warnings in my Favorites and History singletons about memory leak,
+    // if I kept context instance in it.
+    protected DBHelper dbHelper;
+
+
+    protected void init(Context context) {
+        this.ctx = context.getApplicationContext();
+    }
 
     // set dbHelper if it needed (especially for tests)
     void setDbHelper(DBHelper dbHelper) {
@@ -40,7 +50,7 @@ abstract class Dictionary {
         return t.isPresent();
     }
 
-    Integer getIndex(Translation translation) {
+    int getIndex(Translation translation) {
         // setup the default value
         int idx = -1;
         // run over storage to find a translation from param value
@@ -81,10 +91,11 @@ abstract class Dictionary {
         return this.storage.stream()
                 .filter(item -> item.getTranslationKey().equals(item.getKey(name, from, to)))
                 .findFirst();
-    };
+    }
 
     // get all translations from the dictionary
     List<Translation> getAll() {
         return this.storage;
-    };
+    }
+
 }

@@ -1,10 +1,6 @@
 package com.example.vnilov.translator.models;
 
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.Settings;
-
 import com.example.vnilov.translator.DBHelper;
 
 /**
@@ -13,25 +9,23 @@ import com.example.vnilov.translator.DBHelper;
  * Created by vnilov on 18.03.17.
  */
 
-public class History extends Dictionary {
+class History extends Dictionary {
 
     private static final History ourInstance = new History();
 
     static History getInstance() { return ourInstance; }
 
     private History() {
-
     }
 
-
     @Override
-    public void add(Translation translation) {
+    void add(Translation translation) {
 
         int index = dbHelper.getMaxSort() + 1;
         // if translation exists then set it to the top of the list
         if (this.ifExists(translation)) {
             this.delete(translation);
-            // update in sqlite
+            // update in SQLite
             try {
                 dbHelper.update(translation, index, 0);
                 dbHelper.setMaxSort(index);

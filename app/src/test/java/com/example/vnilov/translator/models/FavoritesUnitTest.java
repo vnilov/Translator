@@ -29,6 +29,9 @@ public class FavoritesUnitTest {
         this.favorites.add(this.translationReversed);
         this.favorites.add(this.translationRepeat);
         assertEquals(this.favorites.getAll().size(), 2);
+
+
+
     }
 
     @Test

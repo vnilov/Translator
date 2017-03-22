@@ -1,5 +1,9 @@
 package com.example.vnilov.translator.models;
 
+import android.content.Context;
+
+import com.example.vnilov.translator.DBHelper;
+
 /**
  * Singleton which describes favorites entity of our application.
  *
@@ -19,10 +23,24 @@ class Favorites extends Dictionary {
 
     @Override
     public void add(Translation translation) {
-        if (this.ifExists(translation)) {
-            this.storage.add(translation);
+        this.storage.add(translation);
+    }
+
+    public void toggle(Translation translation) {
+        int isFavorite = 1;
+        if (!this.ifExists(translation)) {
+            this.add(translation);
+        } else {
+            isFavorite = 0;
+            this.delete(translation);
+        }
+        try {
+            dbHelper.update(translation, null, isFavorite);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 
 
 }

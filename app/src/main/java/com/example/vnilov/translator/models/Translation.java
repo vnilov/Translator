@@ -35,7 +35,7 @@ package com.example.vnilov.translator.models;
         return translation;
     }
 
-    public void setTranslation(String translation) {
+    void setTranslation(String translation) {
         this.translation = translation.toLowerCase();
     }
 
@@ -43,7 +43,7 @@ package com.example.vnilov.translator.models;
         return fromLangCode;
     }
 
-    public void setFromLangCode(String fromLangCode) {
+    void setFromLangCode(String fromLangCode) {
         this.fromLangCode = fromLangCode.toLowerCase();
     }
 
@@ -51,7 +51,7 @@ package com.example.vnilov.translator.models;
         return toLangCode;
     }
 
-    public void setToLangCode(String toLangCode) {
+    void setToLangCode(String toLangCode) {
         this.toLangCode = toLangCode.toLowerCase();
     }
 
@@ -74,7 +74,7 @@ package com.example.vnilov.translator.models;
         return input.toLowerCase() + "::" + from.toLowerCase() + "::" + to.toLowerCase();
     }
 
-    public boolean isFavorite() {
+    protected boolean isFavorite() {
         return this.isFavorite;
     }
 

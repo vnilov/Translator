@@ -4,9 +4,6 @@ package com.example.vnilov.translator.models;
  * Created by vnilov on 19.03.17.
  */
 
-import com.example.vnilov.translator.BuildConfig;
-import com.example.vnilov.translator.DBHelper;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +12,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Iterator;
-
 import static org.junit.Assert.*;
+
+import com.example.vnilov.translator.BuildConfig;
+import com.example.vnilov.translator.DBHelper;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, manifest=Config.NONE)
@@ -28,10 +26,10 @@ public class HistoryUnitTest {
     private History historyCheck;
     private DBHelper dbHelper;
 
-    Translation translation = new Translation("Hello", "Привет", "en", "ru");
-    Translation translationRepeat = new Translation("Hello", "Привет", "en", "ru");
-    Translation translationReversed = new Translation("Привет", "Hello", "ru", "en");
-    Translation translationSpanish = new Translation("Hola", "привет", "es", "ru");
+    private Translation translation = new Translation("Hello", "Привет", "en", "ru");
+    private Translation translationRepeat = new Translation("Hello", "Привет", "en", "ru");
+    private Translation translationReversed = new Translation("Привет", "Hello", "ru", "en");
+    private Translation translationSpanish = new Translation("Hola", "привет", "es", "ru");
 
     @Before
     public void init() {
@@ -77,27 +75,28 @@ public class HistoryUnitTest {
         assertEquals(idxReversed, 1);
         // the size of the storage should be the same
         assertEquals(this.history.getAll().size(), 2);
+
         this.history.add(this.translationSpanish); // idx = 2
         assertEquals(this.history.getAll().size(), 3);
+
         this.history.add(this.translation); // idx = 2
 
-        Iterator<Translation> iterator = this.history.getAll().iterator();
-        while (iterator.hasNext()) {
-            Translation item = iterator.next();
-            //System.out.println(item.getInput() + " idx:" + this.history.getIndex(item));
-        }
-
         try {
+            // test DB values
             this.history.setStorage(this.dbHelper.get(DBHelper.ALL));
-            Iterator<Translation> iterator_db = this.history.getAll().iterator();
-            while (iterator_db.hasNext()) {
-                Translation item = iterator_db.next();
-                //System.out.println(item.getInput() + " idx:" + this.history.getIndex(item));
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        int translationIdx = this.history.getIndex(translation);
+        int translationRepeatIdx = this.history.getIndex(translationRepeat);
+        int translationReversedIdx = this.history.getIndex(translationReversed);
+        int translationSpanishIdx = this.history.getIndex(translationSpanish);
+
+        assertEquals(translationIdx, 2);
+        assertEquals(translationRepeatIdx, 2);
+        assertEquals(translationReversedIdx, 0);
+        assertEquals(translationSpanishIdx, 1);
 
     }
 

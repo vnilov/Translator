@@ -9,7 +9,6 @@ import com.example.vnilov.translator.models.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by vnilov on 19.03.17.
@@ -90,8 +89,10 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(CN_FAVORITE, 1);
         }
 
-        // update sort field
-        values.put(CN_SORT, atIndex);
+        if (atIndex != null) {
+            // update sort field
+            values.put(CN_SORT, atIndex);
+        }
 
         String where = CN_INPUT +
                 " = ? AND " + CN_FROM_LANG +
