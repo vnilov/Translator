@@ -30,6 +30,7 @@ abstract class Dictionary {
 
     protected void init(Context context) {
         this.ctx = context.getApplicationContext();
+        this.dbHelper = new DBHelper(this.ctx);
     }
 
     // set dbHelper if it needed (especially for tests)
@@ -84,7 +85,7 @@ abstract class Dictionary {
     // remove all entities from the dictionary
     void deleteAll() {
         this.storage.clear();
-    };
+    }
 
     // get the translation from the dictionary
     Optional<Translation> get(String name, String from, String to) {

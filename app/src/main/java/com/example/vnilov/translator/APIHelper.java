@@ -3,6 +3,7 @@ package com.example.vnilov.translator;
 import android.content.Context;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by vnilov on 22.03.17.
@@ -21,59 +23,89 @@ import java.util.Map;
 
 public class APIHelper {
 
+    /*
+    * Yandex.Translate configs
+    * */
     private static final String API_KEY = "trnsl.1.1.20170322T110839Z.cd5ddcfcdc7deff8.caf3d1354c8fb119afff2d315b1e98d2710077b3";
     private static final String API_URL = "https://translate.yandex.net/api/v1.5/tr.json/";
     private static final String API_LANG = "ru";
 
-    private Context ctx;
+    // context variable
+    private static Context ctx;
+    // volley requests' variable
+    private RequestQueue mRequestQueue;
 
-    APIHelper(Context context) {
-        this.ctx = context;
+
+    /*
+    * We make our singleton lazy loaded and thread-safe
+    * */
+
+    private static class APIHelperHolder {
+        private static Context context;
+        public static APIHelper instance = new APIHelper(context);
+    }
+    public static APIHelper getInstance() {
+        return APIHelperHolder.instance;
     }
 
-    public Map<String, String> getLangList() {
+    private APIHelper(Context context) {
+        ctx = context;
+    }
 
-        String url =  API_URL + "getLangs?key=" + API_KEY + "&ui=" + API_LANG;
+    // get queue
+    private RequestQueue getRequestQueue() {
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+        }
+        return mRequestQueue;
+    }
 
-        Map<String, String> result = new HashMap<String, String>();
+    /*
+    * make an url for requests
+    * */
+    private String makeURL(String methodName, Map<String, String> params) {
+        String url = API_URL + methodName + "?key=" + API_KEY;
+        String[] lambda_obj = new String[1];
 
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            response = response.getJSONObject("langs");
-                            Iterator<String> iterator = response.keys();
-                            while (iterator.hasNext()) {
-                                String key = iterator.next();
-                                try {
-                                    result.put(key, response.get(key).toString());
-                                    System.out.println(key + "/" + response.get(key).toString());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
+        lambda_obj[0] = url;
+        params.forEach((k, v)-> lambda_obj[0] = lambda_obj[0] + "&" + k + "=" + v);
+        url = lambda_obj[0];
+
+        return url;
+    }
+
+    /*
+    *  Request
+    * */
+    public void sendRequest(String methodName, Map<String, String> url_params, Map<String, String> params, final APIHelperListener<String> listener) {
+
+        String url = this.makeURL(methodName, url_params);
+        JSONObject data;
+
+        if (params == null) {
+            data = null;
+        } else {
+            data = new JSONObject(params);
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, data,
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (null != response.toString())
+                        listener.getResult(response.toString());
                 }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (null != error.networkResponse)
+                        listener.getResult(null);
+                }
+            }
         );
 
-        Volley.newRequestQueue(ctx).add(request);
-
-        return result;
+        this.getRequestQueue().add(request);
     }
-
-
-
+    
 }
