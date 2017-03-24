@@ -1,4 +1,4 @@
-package com.example.vnilov.translator.models;
+package com.example.vnilov.translator.repositories;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,6 +8,7 @@ import java.util.Optional;
 import android.content.Context;
 
 import com.example.vnilov.translator.helpers.DBHelper;
+import com.example.vnilov.translator.models.Translation;
 
 /**
  * Dictionary abstract class

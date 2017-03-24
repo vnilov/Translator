@@ -1,9 +1,12 @@
-package com.example.vnilov.translator.models;
+package com.example.vnilov.translator.repositories;
 
 /**
  * Created by vnilov on 18.03.17.
  */
 
+
+import com.example.vnilov.translator.models.Translation;
+import com.example.vnilov.translator.repositories.Favorites;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,9 +32,6 @@ public class FavoritesUnitTest {
         this.favorites.add(this.translationReversed);
         this.favorites.add(this.translationRepeat);
         assertEquals(this.favorites.getAll().size(), 2);
-
-
-
     }
 
     @Test

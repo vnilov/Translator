@@ -1,5 +1,7 @@
-package com.example.vnilov.translator.models;
+package com.example.vnilov.translator.repositories;
 
+
+import com.example.vnilov.translator.models.Translation;
 
 /**
  * Singleton which describes history entity of our application.

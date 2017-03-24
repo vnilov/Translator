@@ -1,4 +1,4 @@
-package com.example.vnilov.translator.models;
+package com.example.vnilov.translator.repositories;
 
 /**
  * Created by vnilov on 19.03.17.
@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
 
 import com.example.vnilov.translator.BuildConfig;
 import com.example.vnilov.translator.helpers.DBHelper;
+import com.example.vnilov.translator.models.Translation;
+import com.example.vnilov.translator.repositories.History;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, manifest=Config.NONE)

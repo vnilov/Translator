@@ -1,5 +1,6 @@
 package com.example.vnilov.translator.helpers;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.android.volley.Request;
@@ -32,7 +33,6 @@ public class APIHelper {
     private static Context ctx;
     // volley requests' variable
     private RequestQueue mRequestQueue;
-
 
     /*
     * We make our singleton lazy loaded and thread-safe

@@ -1,4 +1,6 @@
-package com.example.vnilov.translator.models;
+package com.example.vnilov.translator.repositories;
+
+import com.example.vnilov.translator.models.Translation;
 
 /**
  * Singleton which describes favorites entity of our application.
@@ -19,7 +21,9 @@ class Favorites extends Dictionary {
 
     @Override
     public void add(Translation translation) {
-        this.storage.add(translation);
+        if (!this.ifExists(translation)) {
+            this.storage.add(translation);
+        }
     }
 
     public void toggle(Translation translation) {

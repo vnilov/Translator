@@ -49,24 +49,51 @@ class CacheHelper {
                 buffer.append(line);
             }
             if (buffer != null) {
-                result = new JSONObject(buffer.toString());
+                result = new JSONObject(buffer.toString().trim());
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
         return result;
     }
 
-    public void addData(String data, String filename) {
+    // store cache data
+    public void addData(JSONObject data, String filename) {
         try {
             File file = new File(ctx.getCacheDir(), filename);
             FileOutputStream outputStream = new FileOutputStream(file);
-            outputStream.write(data.getBytes());
+            outputStream.write(data.toString().getBytes());
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /* remove cache functions
+       got these functions as the answer for
+       http://stackoverflow.com/questions/6898090/how-to-clear-cache-android
+       question
+    */
+    public void deleteCache() {
+        try {
+            File dir = ctx.getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+            }
+        } catch (Exception e) {}
+    }
+
+    public boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String aChildren : children) {
+                boolean success = deleteDir(new File(dir, aChildren));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
 }
