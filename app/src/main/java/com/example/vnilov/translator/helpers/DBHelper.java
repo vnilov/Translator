@@ -1,4 +1,4 @@
-package com.example.vnilov.translator;
+package com.example.vnilov.translator.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;

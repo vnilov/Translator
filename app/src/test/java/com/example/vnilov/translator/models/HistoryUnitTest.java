@@ -15,7 +15,7 @@ import org.robolectric.annotation.Config;
 import static org.junit.Assert.*;
 
 import com.example.vnilov.translator.BuildConfig;
-import com.example.vnilov.translator.DBHelper;
+import com.example.vnilov.translator.helpers.DBHelper;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, manifest=Config.NONE)

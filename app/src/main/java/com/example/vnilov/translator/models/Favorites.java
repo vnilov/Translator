@@ -1,9 +1,5 @@
 package com.example.vnilov.translator.models;
 
-import android.content.Context;
-
-import com.example.vnilov.translator.DBHelper;
-
 /**
  * Singleton which describes favorites entity of our application.
  *

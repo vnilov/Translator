@@ -1,8 +1,6 @@
 package com.example.vnilov.translator.models;
 
 
-import com.example.vnilov.translator.DBHelper;
-
 /**
  * Singleton which describes history entity of our application.
  *

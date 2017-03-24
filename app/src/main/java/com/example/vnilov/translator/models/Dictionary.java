@@ -5,10 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import android.app.Application;
 import android.content.Context;
 
-import com.example.vnilov.translator.DBHelper;
+import com.example.vnilov.translator.helpers.DBHelper;
 
 /**
  * Dictionary abstract class

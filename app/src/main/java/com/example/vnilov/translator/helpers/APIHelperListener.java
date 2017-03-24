@@ -1,4 +1,4 @@
-package com.example.vnilov.translator;
+package com.example.vnilov.translator.helpers;
 
 /**
  * Created by vnilov on 3/23/17.

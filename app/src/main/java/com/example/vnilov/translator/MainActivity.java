@@ -1,14 +1,23 @@
 package com.example.vnilov.translator;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.vnilov.translator.helpers.APIHelper;
+import com.example.vnilov.translator.helpers.APIHelperListener;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +42,20 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
+
+                    try {
+                        File file = new File(getCacheDir(), "getLangs");
+                        BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+                        String line;
+                        StringBuffer buffer = new StringBuffer();
+                        while ((line = input.readLine()) != null) {
+                            buffer.append(line);
+                        }
+                        System.out.println(buffer.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
@@ -52,10 +75,26 @@ public class MainActivity extends AppCompatActivity {
 
         Map<String, String> getLangUrlParams = new HashMap<String, String>();
         getLangUrlParams.put("ui", "ru");
-        APIHelper.getInstance().sendRequest("getLangs", getLangUrlParams, null, new APIHelperListener<String>() {
+
+
+        APIHelper apiHelper = APIHelper.getInstance();
+        apiHelper.init(this.getApplicationContext());
+        apiHelper.sendRequest("getLangs", getLangUrlParams, null, new APIHelperListener<JSONObject>() {
             @Override
-            public void getResult(String object) {
-                System.out.println(object);
+            public void getResult(JSONObject object) {
+
+            }
+        });
+
+        Map<String, String> getLangUrlParams_ = new HashMap<String, String>();
+        getLangUrlParams_.put("lang", "ru-en");
+        String text = "text=" + "Привет, чтобы мне сказать вам";
+
+        String TAG = "MyActivity";
+        apiHelper.sendRequest("translate", getLangUrlParams_, text, new APIHelperListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject object) {
+                Log.d(TAG, object.toString());
             }
         });
 

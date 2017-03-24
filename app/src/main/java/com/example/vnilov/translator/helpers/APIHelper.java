@@ -1,4 +1,4 @@
-package com.example.vnilov.translator;
+package com.example.vnilov.translator.helpers;
 
 import android.content.Context;
 
@@ -6,16 +6,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by vnilov on 22.03.17.
@@ -41,21 +39,21 @@ public class APIHelper {
     * */
 
     private static class APIHelperHolder {
-        private static Context context;
-        public static APIHelper instance = new APIHelper(context);
+        public static APIHelper instance = new APIHelper();
     }
     public static APIHelper getInstance() {
         return APIHelperHolder.instance;
     }
 
-    private APIHelper(Context context) {
+
+    public void init(Context context) {
         ctx = context;
     }
 
     // get queue
     private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(ctx);
         }
         return mRequestQueue;
     }
@@ -77,23 +75,16 @@ public class APIHelper {
     /*
     *  Request
     * */
-    public void sendRequest(String methodName, Map<String, String> url_params, Map<String, String> params, final APIHelperListener<String> listener) {
+    public void sendRequest(String methodName, Map<String, String> url_params, String body, final APIHelperListener<JSONObject> listener) {
 
         String url = this.makeURL(methodName, url_params);
-        JSONObject data;
 
-        if (params == null) {
-            data = null;
-        } else {
-            data = new JSONObject(params);
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, data,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (null != response.toString())
-                        listener.getResult(response.toString());
+                    if (null != response)
+                        listener.getResult(response);
                 }
             },
             new Response.ErrorListener() {
@@ -103,7 +94,22 @@ public class APIHelper {
                         listener.getResult(null);
                 }
             }
-        );
+        ) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            public byte[] getBody() {
+                try {
+                    return body == null ? null : body.getBytes("utf-8");
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+        };
 
         this.getRequestQueue().add(request);
     }
